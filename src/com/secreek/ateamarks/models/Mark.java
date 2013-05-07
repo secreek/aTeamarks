@@ -30,7 +30,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Mark {
 
 	@DatabaseField(id = true)
-	private String markId;
+	private int markId;
 
 	@DatabaseField(canBeNull = false)
 	private String pageTitle;
@@ -41,8 +41,8 @@ public class Mark {
 	@DatabaseField(canBeNull = false)
 	private String url;
 
-	@DatabaseField(canBeNull = false, foreign = true)
-	private User sharer;
+	@DatabaseField(canBeNull = false)
+	private int userId;
 
 	public Mark() {
 		
@@ -50,32 +50,31 @@ public class Mark {
 	
 	public Mark(JSONObject object) {
 		try {
-			this.markId = object.getInt("id") + "";
+			this.markId = object.getInt("id");
 			this.pageTitle = object.getString("page_title");
 			this.text = object.getString("text");
 			this.url = object.getString("url");
-			int userId = object.getInt("user_id");
-			// Query user with userId, if not exists, create it
+			this.userId = object.getInt("user_id");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public Mark(String markId, String pageTitle, String text, String url,
+	public Mark(int markId, String pageTitle, String text, String url,
 			User sharer) {
 		super();
 		this.markId = markId;
 		this.pageTitle = pageTitle;
 		this.text = text;
 		this.url = url;
-		this.sharer = sharer;
+		this.userId = sharer.getUserId();
 	}
 
-	public String getMarkId() {
+	public int getMarkId() {
 		return markId;
 	}
 
-	public void setMarkId(String markId) {
+	public void setMarkId(int markId) {
 		this.markId = markId;
 	}
 
@@ -104,11 +103,11 @@ public class Mark {
 	}
 
 	public User getSharer() {
-		return sharer;
+		return User.getUserById(userId);
 	}
 
 	public void setSharer(User sharer) {
-		this.sharer = sharer;
+		this.userId = sharer.getUserId();
 	}
 	
 	public void saveToDatabase(Dao<Mark, String> resultDao) {

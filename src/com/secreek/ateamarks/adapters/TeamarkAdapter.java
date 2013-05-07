@@ -17,14 +17,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.secreek.ateamarks.R;
 import com.secreek.ateamarks.models.Mark;
 import com.secreek.ateamarks.models.User;
-import com.secreek.ateamarks.utils.ImageUtils;
-import com.secreek.ateamarks.utils.MD5;
 
 /**
  * Adapter that converts data to view
@@ -95,9 +92,9 @@ public class TeamarkAdapter extends BaseAdapter {
 		Mark theMark = mMarks.get(position);
 		User theUser = theMark.getSharer();
 		
-		ImageView userAvater = (ImageView)rowView.findViewById(R.id.iv_user_avater);
-		String url = String.format("http://www.gravatar.com/avatar/%1$s", MD5.md5(theUser.getEmail()));
-		userAvater.setImageBitmap(ImageUtils.getBitmapFromUrl(url));
+		//ImageView userAvater = (ImageView)rowView.findViewById(R.id.iv_user_avater);
+		//String url = String.format("http://www.gravatar.com/avatar/%1$s", MD5.md5(theUser.getEmail()));
+		//userAvater.setImageBitmap(ImageUtils.getBitmapFromUrl(url));
 		
 		TextView pageTitle = (TextView)rowView.findViewById(R.id.tv_page_title);
 		pageTitle.setText(theMark.getPageTitle());

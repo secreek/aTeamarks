@@ -41,7 +41,6 @@ public class ApiFetcher {
 	
 	public static List<JSONObject> grabNewMarks(int after) {
 		List<JSONObject> resultMarks = new ArrayList<JSONObject>();
-		System.out.println(String.format(BASE_MARK_URL, after));
 		JSONObject requestResult = getJSONfromURL(String.format(BASE_MARK_URL, after));
 		try {
 			JSONArray markArray = requestResult.getJSONArray("result");

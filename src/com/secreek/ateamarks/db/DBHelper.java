@@ -44,7 +44,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 	
 	private Dao<Mark, String> markDao = null;
 	private RuntimeExceptionDao<Mark, String> markRuntimeDao = null;
-
+	
 	public DBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION,
 				R.raw.ormlite_config);

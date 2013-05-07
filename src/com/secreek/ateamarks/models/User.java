@@ -30,7 +30,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class User {
 	
 	@DatabaseField(id = true)
-    private String userId;
+    private int userId;
 	
 	@DatabaseField(unique = true, canBeNull = false)
 	private String username;
@@ -51,7 +51,7 @@ public class User {
     	
     }
 
-	public User(String userId, String username, String password, String email,
+	public User(int userId, String username, String password, String email,
 			String apikey) {
 		super();
 		this.userId = userId;
@@ -61,11 +61,11 @@ public class User {
 		this.apikey = apikey;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
@@ -99,6 +99,10 @@ public class User {
 
 	public void setApikey(String apikey) {
 		this.apikey = apikey;
+	}
+	
+	public static User getUserById(int userId) {
+		return null;
 	}
 	
 	public void saveToDatabase(Dao<User, String> resultDao) {

@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 		DBHelper helper = getHelper();
 		try {
 			mMarkAdapter = new TeamarkAdapter(this, helper.getMarkDao()
-					.queryForAll());
+					.queryBuilder().orderBy("markId", false).query());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			mMarkAdapter = new TeamarkAdapter(this);
@@ -114,6 +114,11 @@ public class MainActivity extends Activity {
 							Mark newMark = new Mark(links.getJSONObject(idx));
 							newMark.saveToDatabase(markDao);
 						}
+
+						// update display
+						mMarkAdapter.updateMarks(markDao.query(markDao
+								.queryBuilder().orderBy("markId", false)
+								.prepare()));
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
