@@ -53,6 +53,7 @@ public class Mark {
 			this.markId = object.getInt("id") + "";
 			this.pageTitle = object.getString("page_title");
 			this.text = object.getString("text");
+			this.url = object.getString("url");
 			int userId = object.getInt("user_id");
 			// Query user with userId, if not exists, create it
 		} catch (JSONException e) {

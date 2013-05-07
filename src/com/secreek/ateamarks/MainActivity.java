@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected List<JSONObject> doInBackground(Integer... params) {
-			if (params.length > 1) {
+			if (params.length > 0) {
 				return ApiFetcher.grabNewMarks(params[0]);
 			}
 
