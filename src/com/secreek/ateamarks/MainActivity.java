@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.ListView;
@@ -28,33 +29,32 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		mMarkListView = (ListView) findViewById(R.id.mark_list);
-		
+
 		DBHelper helper = getHelper();
 		try {
-			mMarkAdapter = new TeamarkAdapter(this, helper.getMarkDao().queryForAll());
+			mMarkAdapter = new TeamarkAdapter(this, helper.getMarkDao()
+					.queryForAll());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			mMarkAdapter = new TeamarkAdapter(this);
 		}
-		
+
 		mMarkListView.setAdapter(mMarkAdapter);
-		
+
 		Dao<Mark, String> markDao;
 		int after = 0;
 		try {
 			markDao = getHelper().getMarkDao();
-			List<Mark> currentMarks = markDao.query(markDao.queryBuilder().orderBy("markId", false).prepare());
-			if(currentMarks.size() > 0) {
+			List<Mark> currentMarks = markDao.query(markDao.queryBuilder()
+					.orderBy("markId", false).prepare());
+			if (currentMarks.size() > 0) {
 				Mark latestMark = currentMarks.get(0);
 				after = Integer.valueOf(latestMark.getMarkId());
 			}
-			List<JSONObject> objects = ApiFetcher.grabNewMarks(after);
-			for(JSONObject json : objects) {
-				Mark newMark = new Mark(json);
-				newMark.saveToDatabase(markDao);
-			}
+
+			new FetchNewsTask().execute(after);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -81,6 +81,38 @@ public class MainActivity extends Activity {
 			mDbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
 		}
 		return mDbHelper;
+	}
+
+	private class FetchNewsTask extends
+			AsyncTask<Integer, Void, List<JSONObject>> {
+
+		@Override
+		protected List<JSONObject> doInBackground(Integer... params) {
+			if (params.length > 1) {
+				return ApiFetcher.grabNewMarks(params[0]);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(List<JSONObject> result) {
+			if (result == null) {
+				return;
+			}
+
+			Dao<Mark, String> markDao;
+			try {
+				markDao = getHelper().getMarkDao();
+				for (JSONObject json : result) {
+					Mark newMark = new Mark(json);
+					newMark.saveToDatabase(markDao);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 }
