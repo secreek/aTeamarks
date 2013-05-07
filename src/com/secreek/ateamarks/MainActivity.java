@@ -3,6 +3,8 @@ package com.secreek.ateamarks;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -104,9 +106,18 @@ public class MainActivity extends Activity {
 			Dao<Mark, String> markDao;
 			try {
 				markDao = getHelper().getMarkDao();
-				for (JSONObject json : result) {
-					Mark newMark = new Mark(json);
-					newMark.saveToDatabase(markDao);
+				for (JSONObject collection : result) {
+					JSONArray links;
+					try {
+						links = collection.getJSONArray("links");
+						for (int idx = 0; idx < links.length(); idx++) {
+							Mark newMark = new Mark(links.getJSONObject(idx));
+							newMark.saveToDatabase(markDao);
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
